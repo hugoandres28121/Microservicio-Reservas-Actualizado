@@ -25,6 +25,16 @@ public class ReservaController {
         this.habitacionRepository = habitacionRepository;
     }
 
+    public static long diasEntreDosFechas(Date fechaDesde, Date fechaHasta){
+        long startTime = fechaDesde.getTime() ;
+        long endTime = fechaHasta.getTime();
+        long diasDesde = (long) Math.floor(startTime / (1000*60*60*24)); // convertimos a dias, para que no afecten cambios de hora
+        long diasHasta = (long) Math.floor(endTime / (1000*60*60*24)); // convertimos a dias, para que no afecten cambios de hora
+        long dias = diasHasta - diasDesde;
+
+        return dias;
+    }
+
     @PostMapping("/reservas")
     public Reserva newReserva(@RequestBody Reserva reserva){
 
@@ -56,7 +66,10 @@ public class ReservaController {
 
         List <Reserva>listaReservas=this.reservaRepository.findByNombreHabitacion(reserva .getNombreHabitacion());
             if (listaReservas.isEmpty()){
-
+                reserva.setNoches(diasEntreDosFechas(reserva.getFechaIngreso(),reserva.getFechaSalida()));
+                System.out.println(reserva.getNoches());
+                reserva.setValorReserva(nameHabitacion.getPrecio()*reserva.getNoches());
+                System.out.println(reserva.getValorReserva());
                 habitacionRepository.save(nameHabitacion);
             }
             else{
@@ -72,6 +85,15 @@ public class ReservaController {
                     //Fechas de Reserva iguales a las fechas reservadas
                     else if(reserva.getFechaIngreso().compareTo(elemento.getFechaIngreso())==0
                             &&reserva.getFechaSalida().compareTo(elemento.getFechaSalida())==0){
+                        throw new RecursoNoEncontradoException("Fecha Reservada");
+                    }
+
+                    //Fecha de Salida entre Reservas
+
+                    else if (reserva.getFechaIngreso().before(elemento.getFechaIngreso())
+                            &&reserva.getFechaSalida().after(elemento.getFechaIngreso())
+                            &&reserva.getFechaSalida().before(elemento.getFechaSalida())){
+
                         throw new RecursoNoEncontradoException("Fecha Reservada");
                     }
 
@@ -100,13 +122,19 @@ public class ReservaController {
 
                     else if(reserva.getFechaIngreso().compareTo(reserva.getFechaSalida())==0){
 
-                        habitacionRepository.save(nameHabitacion);
-                        reservaRepository.save(reserva);
+                        throw new RecursoNoEncontradoException("Reserva No Permitida");
+
+
                     }
                 });
 
                 //Fin Foreach
             }
+        reserva.setNoches(diasEntreDosFechas(reserva.getFechaIngreso(),reserva.getFechaSalida()));
+        System.out.println(reserva.getNoches());
+        reserva.setValorReserva(nameHabitacion.getPrecio()*reserva.getNoches());
+        System.out.println(reserva.getValorReserva());
+
             return reservaRepository.save(reserva);
             }
 

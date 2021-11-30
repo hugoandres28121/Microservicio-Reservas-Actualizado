@@ -11,9 +11,9 @@ public class Habitacion {
     private String descripcion;
     private String tipo;
     private Boolean estado;
-    private BigDecimal precio;
+    private long precio;
 
-    public Habitacion(String nombre, String region, String descripcion, String tipo, Boolean estado, BigDecimal precio) {
+    public Habitacion(String nombre, String region, String descripcion, String tipo, Boolean estado, long precio) {
         this.nombre = nombre;
         this.region = region;
         this.descripcion = descripcion;
@@ -62,11 +62,11 @@ public class Habitacion {
         this.estado = estado;
     }
 
-    public BigDecimal getPrecio() {
+    public long getPrecio() {
         return precio;
     }
 
-    public void setPrecio(BigDecimal precio) {
+    public void setPrecio(long precio) {
         this.precio = precio;
     }
 }

@@ -2,6 +2,7 @@ package com.reservaHabitaciones.microservicioReserva.models;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.annotation.Id;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -18,17 +19,35 @@ public class Reserva {
     private Date fechaSalida;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private  Date fechaCreacionReserva;
+    private long noches;
+    private long valorReserva;
 
 
-
-
-    public Reserva(String id, String username, String nombreHabitacion, Date fechaIngreso, Date fechaSalida,Date fechaCreacionReserva) {
+    public Reserva(String id, String username, String nombreHabitacion, Date fechaIngreso, Date fechaSalida, Date fechaCreacionReserva, long noches, long valorReserva) {
         this.id = id;
         this.username = username;
         this.nombreHabitacion = nombreHabitacion;
         this.fechaIngreso = fechaIngreso;
         this.fechaSalida = fechaSalida;
-        this.fechaCreacionReserva=fechaCreacionReserva;
+        this.fechaCreacionReserva = fechaCreacionReserva;
+        this.noches = noches;
+        this.valorReserva = valorReserva;
+    }
+
+    public long getNoches() {
+        return noches;
+    }
+
+    public void setNoches(long noches) {
+        this.noches = noches;
+    }
+
+    public long getValorReserva() {
+        return valorReserva;
+    }
+
+    public void setValorReserva(long valorReserva) {
+        this.valorReserva = valorReserva;
     }
 
     public Date getFechaCreacionReserva() {
